@@ -5,24 +5,16 @@ import requests
 from random import randint
 from datetime import datetime
 
-# Can use class
-
-'''
-# class InvalidInputError(Except):
-#	pass
-	# raise InvalidInputError("Need a ... not number") """'''
+exit_code = ['exit', 'wyjscie', 'wyjście', 'quit', '|']
 
 
 def import_www():
 	url = 'https://learn.code.cool/media/progbasics/countries-and-capitals.txt'
 	r = requests.get(url)
-	# r.encoding = 'cp1250'
-	# print(r.text)
 	return r.text
 
 
 def import_password_to_list(answ):
-
 	answ_list = answ.split('\n')
 	return answ_list
 
@@ -40,10 +32,10 @@ def insert_name():
 
 def sex(name_player):
 	if list(name_player)[-1] == 'a':
-		sex_p = "Jesteś kobietą"
+		sex_man = False
 	else:
-		sex_p = 'Jesteś mężczyzną'
-	return sex_p
+		sex_man = True
+	return sex_man
 
 
 def checking_letters(answer_hide, answer, lether, life):
@@ -78,29 +70,28 @@ def encripting(answer):
 
 
 def leteher_input():
-	test_value = True
-	while test_value == True:
+	while True:
 		lether = input('proszę podaj litere: ').lower()
 		if len(lether) == 1 and lether in list(string.ascii_lowercase):
-			test_value = False
-		elif lether == 'exit' or lether == 'wyjscie' or lether == 'wyjście' or lether == '|':
-			test_value = False
+			break
+		elif lether in exit_code:
+			break
 		else:
 			print('podaj prawidłową litere')
-			test_value = True
 
 	return lether
 
 
 def saving_result(life, name_player, start_time, answer):
 	now = datetime.now()
-	delta_time = (start_time-now).seconds
+	delta_time = (start_time - now).seconds
 	try:
 		f = open("hangman.txt", "a+")
 	except:
 		f = open("hangman.txt", "w+")
 
-	line_add = name_player + ' | ' + now.strftime("%d-%b-%Y %H:%M:%S") + ' | ' + str(life) + ' | ' + str(delta_time) + ' | ' + answer + '\n'
+	line_add = name_player + ' | ' + now.strftime("%d-%b-%Y %H:%M:%S") + ' | ' + str(life) + ' | ' + str(
+		delta_time) + ' | ' + answer + '\n'
 	f.write(line_add)
 	write_result()
 	f.close()
@@ -113,13 +104,34 @@ def write_result():
 		print(line)
 
 
+def testing_sex(sex_man):
+	test_sex = 'n'
+	while not test_sex == 't':
+
+		if sex_man is True:
+			test_sex = input("Jesteś Mężczyzną? wybierza 't' aby potwierdzić i 'n' aby zaprzeczyć \n").lower()
+			if test_sex == 'n':
+				sex_man = False
+			else:
+				pass
+		else:
+			test_sex = input("Jesteś Kobietą? wybierza 't' aby potwierdzić i 'n' aby zaprzeczyć \n").lower()
+			if test_sex == 'n':
+				sex_man = True
+			else:
+				pass
+	return sex_man
+
+
 def main():
 	os.system('clear')
 	start_time = datetime.now()
 	name_player = insert_name()
-	sex_p = sex(name_player)
+	sex_man = sex(name_player)
+
+	sex_man = testing_sex(sex_man)
 	answ = import_www()
-	print(sex_p)
+
 	answ_list = import_password_to_list(answ)
 	ran_pass = random_password(answ_list)
 	life = 5
@@ -131,36 +143,36 @@ def main():
 
 	while life > 0:
 		lether = leteher_input()
-		if sex_p == "Jesteś kobietą":
-			print('Wybrałaś: ' + str(lether))
-		else:
-			print('Wybrałeś: ' + str(lether))
+		os.system('clear')
+		print('Wybrałaś: ' if sex_man is False else 'Wybrałeś: ' + lether)
 
 		answer_hide, life = checking_letters(answer_hide, answer, lether, life)
-		
-		if lether == 'exit' or lether == 'wyjscie' or lether == 'wyjście':
+
+		if lether in exit_code:
 			break
 
 		check_how_meny_lethers_left = answer_hide.count('*')
 
-		if check_how_meny_lethers_left == 0:
-			if sex_p == "Jesteś kobietą":
+		if not check_how_meny_lethers_left:
+			if sex_man is False:
 				print('Wygrałaś {} gratulacje'.format(name_player))
 			else:
 				print('Wygrałeś {} gratulacje'.format(name_player))
 			# Wprowadzic zapis
-			
+
 			saving_result(life, name_player, start_time, answer)
 			break
 
 		print('Pozostało prób : ' + str(life))
+		print()
+
+	if life == 0:
+		if sex_man is False:
+			print('przegrałaś {} zagraj jeszcze raz \n'.format(name_player))
+		else:
+			print('przegrałeś {} zagraj jeszcze raz \n'.format(name_player))
 
 	write_result()
-	if life == 0:
-		if sex_p == "Jesteś kobietą":
-			print('przegrałaś {} zagraj jeszcze raz'.format(name_player))
-		else:
-			print('przegrałeś {} zagraj jeszcze raz'.format(name_player))
 
 
 if __name__ == "__main__":

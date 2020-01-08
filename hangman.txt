@@ -11,3 +11,5 @@ majkel | 13-Dec-2019 09:24:03 | 3 | 86351 | poland | warsaw
 grupa | 13-Dec-2019 13:29:23 | 3 | 86293 | costa rica | san jose
 A | 07-Jan-2020 13:45:31 | 3 | 86349 | uruguay | montevideo
 Max | 07-Jan-2020 13:55:00 | 1 | 86298 | united arab emirates | abu dhabi
+max | 08-Jan-2020 13:39:21 | 1 | 86366 | serbia | belgrade
+max | 08-Jan-2020 18:36:18 | 1 | 86140 | saint vincent and the grenadines | kingstown
