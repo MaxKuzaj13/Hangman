@@ -6,12 +6,19 @@ from random import randint
 from datetime import datetime
 
 exit_code = ['exit', 'wyjscie', 'wyjście', 'quit', '|']
+LIFE = 5
 
 
 def import_www():
-	url = 'https://learn.code.cool/media/progbasics/countries-and-capitals.txt'
-	r = requests.get(url)
-	return r.text
+	try:
+		url = 'https://learn.code.cool/media/progbasics/countries-and-capitals.txt '
+		r = requests.get(url)
+		comment = r.text
+	except:
+		print("wystąpił problem z połaczeniem z baza danych sprubuj później")
+		exit()
+		comment = 'wyjscie'
+	return comment
 
 
 def import_password_to_list(answ):
@@ -123,6 +130,14 @@ def testing_sex(sex_man):
 	return sex_man
 
 
+def print_if_left_zero(life, sex_man, name_player):
+	if life == 0:
+		if sex_man is False:
+			print('przegrałaś {} zagraj jeszcze raz \n'.format(name_player))
+		else:
+			print('przegrałeś {} zagraj jeszcze raz \n'.format(name_player))
+
+
 def main():
 	os.system('clear')
 	start_time = datetime.now()
@@ -134,11 +149,11 @@ def main():
 
 	answ_list = import_password_to_list(answ)
 	ran_pass = random_password(answ_list)
-	life = 5
+	life = LIFE
 	# do dodania import
 	answer = ran_pass.lower()
 	# answer_hide
-	print(name_player + ' możesz zgadywać nasze hasło:')
+	print(name_player + ' możesz zgadywać nasze hasło (hasło jest w języku angielskim i zawiera nazwę stolicy oraz nazwe państwa w którym się znajduje:')
 	answer_hide = encripting(answer)
 
 	while life > 0:
@@ -165,12 +180,7 @@ def main():
 
 		print('Pozostało prób : ' + str(life))
 		print()
-
-	if life == 0:
-		if sex_man is False:
-			print('przegrałaś {} zagraj jeszcze raz \n'.format(name_player))
-		else:
-			print('przegrałeś {} zagraj jeszcze raz \n'.format(name_player))
+	print_if_left_zero(life, sex_man, name_player)
 
 	write_result()
 
